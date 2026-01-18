@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biology Finals Flashcards</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+    :root {
+      color-scheme: light;
+      --bg: #f4efe6;
+      --bg-2: #d7e6e0;
+      --ink: #1b1a17;
+      --muted: #5a5a54;
+      --accent: #0f6c63;
+      --accent-2: #f29f58;
+      --card: #fff9f2;
+      --card-2: #f4f1ea;
+      --border: #d9d2c5;
+      --shadow: 0 24px 60px rgba(24, 33, 27, 0.18);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 12% 12%, rgba(242, 159, 88, 0.18), transparent 40%),
+        radial-gradient(circle at 85% 15%, rgba(15, 108, 99, 0.18), transparent 35%),
+        linear-gradient(140deg, var(--bg), var(--bg-2));
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      display: grid;
+      gap: 32px;
+    }
+
+    header {
+      display: grid;
+      gap: 18px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    h1 {
+      font-family: "Fraunces", "Times New Roman", serif;
+      font-size: clamp(2.4rem, 3vw, 3.6rem);
+      margin: 0;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 760px;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .card-stage {
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      display: grid;
+      gap: 20px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .controls-left,
+    .controls-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    select,
+    button {
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: white;
+      color: var(--ink);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    button:hover,
+    select:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      box-shadow: 0 6px 16px rgba(15, 108, 99, 0.2);
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .progress {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .flashcard {
+      perspective: 1400px;
+      min-height: 360px;
+    }
+
+    .flashcard-inner {
+      position: relative;
+      min-height: 360px;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      padding: 28px;
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .face.back {
+      transform: rotateY(180deg);
+      background: var(--card-2);
+    }
+
+    .term {
+      font-family: "Fraunces", "Times New Roman", serif;
+      font-size: clamp(2rem, 3.4vw, 2.8rem);
+      margin: 0;
+    }
+
+    .category {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .prompt {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(15, 108, 99, 0.12);
+      color: var(--accent);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .study-panel {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(24, 33, 27, 0.12);
+      display: grid;
+      gap: 18px;
+    }
+
+    .study-panel h2 {
+      font-family: "Fraunces", "Times New Roman", serif;
+      font-size: 1.6rem;
+      margin: 0;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 14px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      background: white;
+    }
+
+    .tips {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flashcard,
+      .flashcard-inner {
+        min-height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="eyebrow">Trimester 1 - Biology Finals</div>
+      <h1>Vocabulary Flashcards, Condensed</h1>
+      <p class="subtitle">
+        Use these cards to drill the terms from the class PDF. Flip each card, write a short definition,
+        and keep moving. You can filter by section, shuffle, or run through everything in order.
+      </p>
+      <div class="header-actions">
+        <span class="pill">Source: <a href="../Vocabulary Trimester 1 Condensed.pdf" target="_blank" rel="noopener">Vocabulary Trimester 1 Condensed.pdf</a></span>
+        <span class="pill">Shortcut keys: Left/Right navigate, space to flip, S to shuffle</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card-stage">
+        <div class="controls">
+          <div class="controls-left">
+            <label>
+              <select id="categorySelect" aria-label="Filter by category"></select>
+            </label>
+            <button id="shuffleBtn">Shuffle deck</button>
+            <button id="resetBtn">Reset order</button>
+          </div>
+          <div class="controls-right">
+            <span class="progress" id="progressText">1 / 1</span>
+            <button id="prevBtn">Previous</button>
+            <button class="primary" id="flipBtn">Flip card</button>
+            <button id="nextBtn">Next</button>
+          </div>
+        </div>
+
+        <div class="flashcard" id="flashcard">
+          <div class="flashcard-inner">
+            <article class="face front">
+              <span class="tagline">Front</span>
+              <div class="category" id="categoryLabel"></div>
+              <h2 class="term" id="termText">Term</h2>
+              <p class="prompt">Say the definition out loud before you flip. Add an example if you can.</p>
+            </article>
+            <article class="face back">
+              <span class="tagline">Back</span>
+              <h3 class="term" id="termEcho">Term</h3>
+              <p class="prompt">Quick check: define it, connect it to a unit, and note one real example.</p>
+              <div class="tips">
+                If you want official definitions, open the source PDF or add your own notes in the side panel.
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span id="countText">Total cards: 0</span>
+          <span id="sectionText">Section: All</span>
+        </div>
+      </section>
+
+      <aside class="study-panel">
+        <h2>Study Scratchpad</h2>
+        <p class="tips">
+          Jot your definition here, then compare with notes or class materials.
+          This field does not save automatically.
+        </p>
+        <textarea id="scratchpad" placeholder="Write the definition, formula, or example that matches the term..."></textarea>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const vocab = [
+      { term: "Scientific Method", category: "Scientific Method" },
+      { term: "Independent Variable", category: "Scientific Method" },
+      { term: "Dependent Variable", category: "Scientific Method" },
+      { term: "Control", category: "Scientific Method" },
+      { term: "Variables", category: "Scientific Method" },
+      { term: "Hypothesis", category: "Scientific Method" },
+      { term: "Prediction", category: "Scientific Method" },
+      { term: "Conclusion", category: "Scientific Method" },
+      { term: "Experiment", category: "Scientific Method" },
+      { term: "Data", category: "Scientific Method" },
+
+      { term: "Acid", category: "Chemistry" },
+      { term: "Activation Energy", category: "Chemistry" },
+      { term: "Adhesion", category: "Chemistry" },
+      { term: "Atom", category: "Chemistry" },
+      { term: "Atomic Mass", category: "Chemistry" },
+      { term: "Atomic Number", category: "Chemistry" },
+      { term: "Base", category: "Chemistry" },
+      { term: "Buffer", category: "Chemistry" },
+      { term: "Capillarity", category: "Chemistry" },
+      { term: "Catalyst", category: "Chemistry" },
+      { term: "Chemical Bond", category: "Chemistry" },
+      { term: "Chemical Reactant", category: "Chemistry" },
+      { term: "Cohesion", category: "Chemistry" },
+      { term: "Compound", category: "Chemistry" },
+      { term: "Covalent Bond", category: "Chemistry" },
+      { term: "Electron", category: "Chemistry" },
+      { term: "Element", category: "Chemistry" },
+      { term: "Energy", category: "Chemistry" },
+      { term: "Enzyme", category: "Chemistry" },
+      { term: "Groups/Families", category: "Chemistry" },
+      { term: "Hydrogen Bond", category: "Chemistry" },
+      { term: "Ion", category: "Chemistry" },
+      { term: "Ionic Bond", category: "Chemistry" },
+      { term: "Isotope", category: "Chemistry" },
+      { term: "Mass", category: "Chemistry" },
+      { term: "Matter", category: "Chemistry" },
+      { term: "Metabolism", category: "Chemistry" },
+      { term: "Molecule", category: "Chemistry" },
+      { term: "Neutron", category: "Chemistry" },
+      { term: "Nucleus", category: "Chemistry" },
+      { term: "Orbital", category: "Chemistry" },
+      { term: "pH Scale", category: "Chemistry" },
+      { term: "Polar", category: "Chemistry" },
+      { term: "Proton", category: "Chemistry" },
+      { term: "Period", category: "Chemistry" },
+      { term: "Solute", category: "Chemistry" },
+      { term: "Solution", category: "Chemistry" },
+      { term: "Solvent", category: "Chemistry" },
+
+      { term: "Carbohydrate", category: "Biological Molecules" },
+      { term: "Protein", category: "Biological Molecules" },
+      { term: "Lipid", category: "Biological Molecules" },
+      { term: "Nucleic Acids", category: "Biological Molecules" },
+      { term: "Amino Acids", category: "Biological Molecules" },
+      { term: "Monosaccharides", category: "Biological Molecules" },
+      { term: "Fatty Acids", category: "Biological Molecules" },
+      { term: "Nucleotides", category: "Biological Molecules" },
+      { term: "Monomer", category: "Biological Molecules" },
+
+      { term: "Biosphere", category: "Ecology" },
+      { term: "Biome", category: "Ecology" },
+      { term: "Canopy", category: "Ecology" },
+      { term: "Humus", category: "Ecology" },
+      { term: "Plankton", category: "Ecology" },
+      { term: "Wetland", category: "Ecology" },
+      { term: "Estuary", category: "Ecology" },
+      { term: "Climate", category: "Ecology" },
+      { term: "Weather", category: "Ecology" },
+      { term: "Ecology", category: "Ecology" },
+      { term: "Species", category: "Ecology" },
+      { term: "Population", category: "Ecology" },
+      { term: "Community", category: "Ecology" },
+      { term: "Ecosystem", category: "Ecology" },
+      { term: "Biotic Factor", category: "Ecology" },
+      { term: "Abiotic Factor", category: "Ecology" },
+      { term: "Atmosphere", category: "Ecology" },
+      { term: "Hydrosphere", category: "Ecology" },
+      { term: "Geosphere", category: "Ecology" },
+
+      { term: "Biogeochemical Cycle", category: "Cycles of Matter" },
+      { term: "Nutrient", category: "Cycles of Matter" },
+      { term: "Nitrogen Fixation", category: "Cycles of Matter" },
+      { term: "Denitrification", category: "Cycles of Matter" },
+      { term: "Limiting Nutrient", category: "Cycles of Matter" },
+      { term: "Heterotroph", category: "Cycles of Matter" },
+      { term: "Food Chain", category: "Cycles of Matter" },
+      { term: "Food Web", category: "Cycles of Matter" },
+      { term: "Trophic Level", category: "Cycles of Matter" },
+      { term: "Ecological Pyramid", category: "Cycles of Matter" },
+      { term: "Biomass", category: "Cycles of Matter" },
+      { term: "Autotroph", category: "Cycles of Matter" },
+      { term: "Primary Producer", category: "Cycles of Matter" },
+      { term: "Photosynthesis", category: "Cycles of Matter" },
+      { term: "Cellular Respiration", category: "Cycles of Matter" },
+      { term: "Chemosynthesis", category: "Cycles of Matter" },
+      { term: "Consumer", category: "Cycles of Matter" },
+      { term: "Detritus", category: "Cycles of Matter" },
+
+      { term: "Limiting Factor", category: "Populations" },
+      { term: "Density-Dependent Limiting Factor", category: "Populations" },
+      { term: "Density-Independent Limiting Factor", category: "Populations" },
+      { term: "Population Density", category: "Populations" },
+      { term: "Population Distribution", category: "Populations" },
+      { term: "Immigration", category: "Populations" },
+      { term: "Emigration", category: "Populations" },
+      { term: "Exponential Growth", category: "Populations" },
+      { term: "Logistic Growth", category: "Populations" },
+      { term: "Carrying Capacity", category: "Populations" }
+    ];
+
+    const flashcard = document.getElementById("flashcard");
+    const termText = document.getElementById("termText");
+    const termEcho = document.getElementById("termEcho");
+    const categoryLabel = document.getElementById("categoryLabel");
+    const progressText = document.getElementById("progressText");
+    const countText = document.getElementById("countText");
+    const sectionText = document.getElementById("sectionText");
+    const categorySelect = document.getElementById("categorySelect");
+
+    let currentIndex = 0;
+    let deck = [...vocab];
+
+    const categories = ["All", ...new Set(vocab.map((item) => item.category))];
+
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      categorySelect.appendChild(option);
+    });
+
+    function updateDeck(category) {
+      deck = category === "All" ? [...vocab] : vocab.filter((item) => item.category === category);
+      currentIndex = 0;
+      renderCard();
+      updateMeta(category);
+    }
+
+    function updateMeta(category) {
+      countText.textContent = `Total cards: ${deck.length}`;
+      sectionText.textContent = `Section: ${category}`;
+    }
+
+    function renderCard() {
+      if (deck.length === 0) {
+        termText.textContent = "No cards";
+        termEcho.textContent = "No cards";
+        categoryLabel.textContent = "";
+        progressText.textContent = "0 / 0";
+        return;
+      }
+
+      const card = deck[currentIndex];
+      termText.textContent = card.term;
+      termEcho.textContent = card.term;
+      categoryLabel.textContent = card.category;
+      progressText.textContent = `${currentIndex + 1} / ${deck.length}`;
+      flashcard.classList.remove("flipped");
+    }
+
+    function nextCard() {
+      currentIndex = (currentIndex + 1) % deck.length;
+      renderCard();
+    }
+
+    function prevCard() {
+      currentIndex = (currentIndex - 1 + deck.length) % deck.length;
+      renderCard();
+    }
+
+    function shuffleDeck() {
+      for (let i = deck.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+      currentIndex = 0;
+      renderCard();
+    }
+
+    document.getElementById("flipBtn").addEventListener("click", () => {
+      flashcard.classList.toggle("flipped");
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", nextCard);
+    document.getElementById("prevBtn").addEventListener("click", prevCard);
+    document.getElementById("shuffleBtn").addEventListener("click", shuffleDeck);
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      updateDeck(categorySelect.value);
+    });
+
+    categorySelect.addEventListener("change", (event) => {
+      updateDeck(event.target.value);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target.tagName === "TEXTAREA") {
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        nextCard();
+      } else if (event.key === "ArrowLeft") {
+        prevCard();
+      } else if (event.key === " ") {
+        event.preventDefault();
+        flashcard.classList.toggle("flipped");
+      } else if (event.key.toLowerCase() === "s") {
+        shuffleDeck();
+      }
+    });
+
+    updateDeck("All");
+  </script>
+</body>
+</html>
