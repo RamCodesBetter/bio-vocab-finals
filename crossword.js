@@ -19,6 +19,7 @@ class CrosswordPuzzle {
 
     init() {
         this.bindEvents();
+        this.initTutorial();
         this.generatePuzzle();
     }
 
@@ -857,6 +858,24 @@ class CrosswordPuzzle {
         document.getElementById('final-words').textContent = this.placedWords.length;
         document.getElementById('final-hints').textContent = this.hintsUsed;
         document.getElementById('success-modal').classList.add('active');
+    }
+
+    // Tutorial Modal
+    initTutorial() {
+        const tutorialSeen = localStorage.getItem('crossword_tutorial_seen_v1');
+        if (!tutorialSeen) {
+            setTimeout(() => {
+                document.getElementById('tutorial-modal').classList.add('active');
+            }, 500); // Small delay for better UX
+        }
+
+        document.getElementById('tutorial-close').addEventListener('click', () => this.closeTutorial());
+        document.getElementById('start-playing').addEventListener('click', () => this.closeTutorial());
+    }
+
+    closeTutorial() {
+        document.getElementById('tutorial-modal').classList.remove('active');
+        localStorage.setItem('crossword_tutorial_seen_v1', 'true');
     }
 
     closeSuccessModal() {

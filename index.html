@@ -137,6 +137,54 @@
                 </button>
             </div>
         </div>
+
+        <!-- Tutorial Modal -->
+        <div class="modal" id="tutorial-modal">
+            <div class="modal-content tutorial-content">
+                <div class="modal-header">
+                    <h3>Welcome to Biology Crosswords!</h3>
+                    <button class="modal-close" id="tutorial-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="tutorial-section">
+                        <h5>🕹️ Game Controls</h5>
+                        <ul class="tutorial-list">
+                            <li><strong>Check All:</strong> Verifies filled cells (Green = Correct, Red = Wrong).</li>
+                            <li><strong>Reveal Word:</strong> Instantly fills the current selected word.</li>
+                            <li><strong>New Puzzle:</strong> Generates a completely new random crossword.</li>
+                            <li><strong>Timer:</strong> Click ⏸️/▶️ to pause or resume your session.</li>
+                        </ul>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h5>⌨️ Keyboard Shortcuts</h5>
+                        <div class="shortcut-grid">
+                            <div class="shortcut-item">
+                                <span class="key">Arrows</span> <span>Move Cell</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="key">Tab</span> <span>Next Word</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="key">Bksp</span> <span>Delete</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="key">Space</span> <span>Switch Dir</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h5>🏆 Features</h5>
+                        <p>Choose between <strong>25 Words</strong> (Quick) or <strong>All Words</strong> (Challenge)
+                            modes. Hover over clues for a <strong>Hint</strong>!</p>
+                    </div>
+                    <button class="btn btn-primary btn-large" id="start-playing" style="width: 100%; margin-top: 1rem;">
+                        Start Playing!
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="vocab-data.js"></script>
