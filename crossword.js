@@ -554,7 +554,7 @@ class CrosswordPuzzle {
 
     handleInput(e) {
         const input = e.target;
-        const value = input.value.toUpperCase();
+        const value = input.value.toUpperCase().slice(-1);
         input.value = value;
 
         if (value) {
@@ -562,7 +562,6 @@ class CrosswordPuzzle {
         }
 
         this.updateProgress();
-        this.checkCompletion();
     }
 
     handleKeydown(e) {
@@ -604,6 +603,9 @@ class CrosswordPuzzle {
         const input = e.target;
         const row = parseInt(input.dataset.row);
         const col = parseInt(input.dataset.col);
+
+        // Select existing text so typing replaces it
+        input.select();
 
         const wordIds = this.grid[row][col].wordIds;
         if (wordIds.length > 0) {
